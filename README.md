@@ -53,13 +53,13 @@ Both hooks are supported in `optimize_spade` and `KnnStats`/`KnnDensityHelper`.
 
 ## Citation
 If you find SPADE useful in your research, please cite this:
-```latex
+```bibtex
 @inproceedings{
-yang2026supportproximity,
-title={Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
-author={Yonghan Yang and Ye Yuan and Zipeng Sun and Linfeng Du and Bowei He and Haolun Wu and Can Chen and Xue Liu},
-booktitle={ICLR 2026 2nd Workshop on Deep Generative Model in Machine Learning: Theory, Principle and Efficacy},
-year={2026},
-url={https://openreview.net/forum?id=bTMCB3gorf}
+  yang2026supportproximity,
+  title={Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
+  author={Yonghan Yang and Ye Yuan and Zipeng Sun and Linfeng Du and Bowei He and Haolun Wu and Can Chen and Xue Liu},
+  booktitle={ICLR 2026 2nd Workshop on Deep Generative Model in Machine Learning: Theory, Principle and Efficacy},
+  year={2026},
+  url={https://openreview.net/forum?id=bTMCB3gorf}
 }
 ```
