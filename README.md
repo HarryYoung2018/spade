@@ -1,6 +1,6 @@
 # SPADE: Support-Proximity Augmented Diffusion Estimation
 
-This repository contains a minimal, core implementation of SPADE for offline black-box optimization. The code is intentionally compact and focused on a conditional diffusion surrogate trained with calibrated diffusion estimation and support-proximity regularization, then optimized via LCB acquisition and evolutionary search.
+This repository contains the official implementation for the paper ["Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization"](https://openreview.net/forum?id=bTMCB3gorf), which is accepted by **ICLR 2026 DeLTa Workshop**. The code is intentionally compact and focused on a conditional diffusion surrogate trained with calibrated diffusion estimation and support-proximity regularization, then optimized via LCB acquisition and evolutionary search.
 
 ## Usage
 
@@ -43,10 +43,23 @@ Both hooks are supported in `optimize_spade` and `KnnStats`/`KnnDensityHelper`.
 - `torch`
 - `scikit-learn`
 
-## Repo layout (core only)
+## Repo layout
 - `spade/diffusion.py`: conditional diffusion surrogate + DDIM sampling
 - `spade/regularizers.py`: calibration + support-proximity losses
 - `spade/knn.py`: kNN density helper and cached training stats
 - `spade/train.py`: training loop for surrogate fitting
 - `spade/optimize.py`: LCB acquisition + evolutionary search
 - `spade/data.py`: minimal dataset loading and normalization
+
+## Citation
+If you find SPADE useful in your research, please cite this:
+```latex
+@inproceedings{
+yang2026supportproximity,
+title={Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
+author={Yonghan Yang and Ye Yuan and Zipeng Sun and Linfeng Du and Bowei He and Haolun Wu and Can Chen and Xue Liu},
+booktitle={ICLR 2026 2nd Workshop on Deep Generative Model in Machine Learning: Theory, Principle and Efficacy},
+year={2026},
+url={https://openreview.net/forum?id=bTMCB3gorf}
+}
+```
