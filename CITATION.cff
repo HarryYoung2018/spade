@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use SPADE, please cite the ICML 2026 paper."
+title: "Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization"
+authors:
+  - family-names: Yang
+    given-names: Yonghan
+  - family-names: Yuan
+    given-names: Ye
+    email: ye.yuan3@mail.mcgill.ca
+  - family-names: Sun
+    given-names: Zipeng
+  - family-names: Du
+    given-names: Linfeng
+  - family-names: He
+    given-names: Bowei
+  - family-names: Wu
+    given-names: Haolun
+  - family-names: Chen
+    given-names: Can
+  - family-names: Liu
+    given-names: Xue
+year: 2026
+doi: 10.48550/arXiv.2605.11246
+url: "https://arxiv.org/abs/2605.11246"
+repository-code: "https://github.com/HarryYoung2018/spade"

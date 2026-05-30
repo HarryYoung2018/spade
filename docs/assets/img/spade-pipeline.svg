@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" role="img" aria-labelledby="title desc">
+  <title id="title">SPADE pipeline</title>
+  <desc id="desc">SPADE combines a conditional diffusion surrogate, calibration, and kNN support proximity.</desc>
+  <rect width="900" height="360" rx="18" fill="#ffffff"/>
+  <g font-family="Inter, system-ui, -apple-system, Segoe UI, sans-serif">
+    <text x="40" y="54" fill="#132b56" font-size="24" font-weight="800">SPADE training and acquisition</text>
+    <g transform="translate(50 105)">
+      <rect width="175" height="120" rx="12" fill="#eaf0ff" stroke="#b9c8ee"/>
+      <text x="87.5" y="42" text-anchor="middle" fill="#132b56" font-size="16" font-weight="800">Fixed dataset</text>
+      <text x="87.5" y="70" text-anchor="middle" fill="#5f6f8a" font-size="13">(x, y)</text>
+      <circle cx="56" cy="88" r="5" fill="#3157a4"/>
+      <circle cx="81" cy="82" r="5" fill="#3157a4"/>
+      <circle cx="116" cy="93" r="5" fill="#b94f3b"/>
+    </g>
+    <g transform="translate(285 105)">
+      <rect width="185" height="120" rx="12" fill="#fff" stroke="#d9e1ee"/>
+      <text x="92.5" y="38" text-anchor="middle" fill="#132b56" font-size="16" font-weight="800">Diffusion</text>
+      <text x="92.5" y="64" text-anchor="middle" fill="#132b56" font-size="16" font-weight="800">surrogate</text>
+      <text x="92.5" y="92" text-anchor="middle" fill="#5f6f8a" font-size="13">predictive p_theta(y|x)</text>
+    </g>
+    <g transform="translate(530 80)">
+      <rect width="150" height="82" rx="12" fill="#fff" stroke="#d9e1ee"/>
+      <text x="75" y="35" text-anchor="middle" fill="#132b56" font-size="15" font-weight="800">Calibration</text>
+      <text x="75" y="58" text-anchor="middle" fill="#5f6f8a" font-size="12">moment + rank</text>
+    </g>
+    <g transform="translate(530 188)">
+      <rect width="150" height="82" rx="12" fill="#fff1ed" stroke="#efc9c0"/>
+      <text x="75" y="35" text-anchor="middle" fill="#132b56" font-size="15" font-weight="800">kNN support</text>
+      <text x="75" y="58" text-anchor="middle" fill="#5f6f8a" font-size="12">shrink + inflate</text>
+    </g>
+    <g transform="translate(735 124)">
+      <rect width="120" height="102" rx="12" fill="#132b56"/>
+      <text x="60" y="40" text-anchor="middle" fill="#fff" font-size="15" font-weight="800">LCB</text>
+      <text x="60" y="64" text-anchor="middle" fill="#fff" font-size="15" font-weight="800">acquisition</text>
+      <text x="60" y="86" text-anchor="middle" fill="#c9d6f5" font-size="12">robust design</text>
+    </g>
+    <g fill="none" stroke="#3157a4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M235 165h40"/>
+      <path d="M480 165c28 0 32-42 42-42"/>
+      <path d="M480 165c28 0 32 64 42 64"/>
+      <path d="M690 121c24 0 27 54 37 54"/>
+      <path d="M690 230c24 0 27-54 37-54"/>
+      <path d="M273 156l12 9-12 9"/>
+      <path d="M520 114l12 9-12 9"/>
+      <path d="M520 220l12 9-12 9"/>
+      <path d="M725 166l12 9-12 9"/>
+    </g>
+  </g>
+</svg>
