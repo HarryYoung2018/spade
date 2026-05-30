@@ -1,65 +1,226 @@
 # SPADE: Support-Proximity Augmented Diffusion Estimation
 
-This repository contains the official implementation for the paper ["Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization"](https://openreview.net/forum?id=bTMCB3gorf), which is accepted by **ICLR 2026 DeLTa Workshop**. The code is intentionally compact and focused on a conditional diffusion surrogate trained with calibrated diffusion estimation and support-proximity regularization, then optimized via LCB acquisition and evolutionary search.
+Official implementation of:
 
-## Usage
+**Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization**
 
-### 1) Prepare data
-Provide a NumPy `.npz` file with:
-- `x`: shape `(N, D)` design vectors
-- `y`: shape `(N,)` or `(N, 1)` property scores
+Accepted by **ICML 2026**.
 
-### 2) Train the surrogate and run optimization
+[![arXiv](https://img.shields.io/badge/arXiv-2605.11246-b31b1b.svg)](https://arxiv.org/abs/2605.11246)
+[![ICML 2026](https://img.shields.io/badge/ICML-2026-243b6b.svg)](https://icml.cc/)
+[![Python](https://img.shields.io/badge/python-3.9%2B-3776ab.svg)](https://www.python.org/)
+[![Project page](https://img.shields.io/badge/project-page-1f6feb.svg)](https://HarryYoung2018.github.io/spade/)
+
+| Resource | Link |
+|---|---|
+| Paper | [arXiv:2605.11246](https://arxiv.org/abs/2605.11246) |
+| PDF | [arXiv PDF](https://arxiv.org/pdf/2605.11246) |
+| Project page | [HarryYoung2018.github.io/spade](https://HarryYoung2018.github.io/spade/) |
+| Poster | TODO |
+| Slides | TODO |
+
+## TL;DR
+
+SPADE turns forward surrogate modeling into a calibrated conditional diffusion problem and injects a kNN support prior to prevent offline optimizers from exploiting unsupported regions.
+
+## Overview
+
+Offline black-box optimization searches for high-scoring designs from a fixed dataset without online oracle access. A central difficulty is OOD exploitation: optimizers can chase surrogate errors in unsupported regions.
+
+SPADE models the forward likelihood \(p(y|x)\) with a conditional diffusion surrogate, then adds calibration and support-proximity regularization so acquisition optimization remains both expressive and conservative.
+
+## Method summary
+
+- **Conditional Diffusion Surrogate:** models \(p_\theta(y|x)\), giving a predictive distribution rather than only a point estimate.
+- **Calibrated Diffusion Estimation:** adds moment matching and pairwise rank consistency so the surrogate is useful for optimization.
+- **Support-Proximity Regularization:** uses kNN distance to shrink predicted means and inflate uncertainty in low-density regions.
+
+```math
+p(x | y) \propto p(y | x)p(x)
+```
+
+```math
+\mathrm{LCB}(x) = \hat{\mu}_\theta(x) - \beta \hat{\sigma}_\theta(x)
+```
+
+## Results snapshot
+
+| Metric | SPADE |
+|---|---:|
+| Mean rank, normalized max score | 2.8 / 24 |
+| Median rank, normalized max score | 1.5 / 24 |
+| Top-2 tasks, normalized max score | 5 / 6 |
+| Mean rank, normalized median score | 1.7 / 24 |
+| Median rank, normalized median score | 1.0 / 24 |
+
+| Task | SPADE normalized max score |
+|---|---:|
+| SuperC | 0.546 ± 0.013 |
+| Ant | 0.978 ± 0.006 |
+| D’Kitty | 0.981 ± 0.003 |
+| LLM-DM | 1.019 ± 0.064 |
+| TF8 | 0.923 ± 0.015 |
+| TF10 | 0.915 ± 0.010 |
+
+## Installation
+
+```bash
+git clone https://github.com/HarryYoung2018/spade.git
+cd spade
+
+conda create -n spade python=3.10 -y
+conda activate spade
+pip install -r requirements.txt
+pip install -e .
+```
+
+For development and smoke tests:
+
+```bash
+pip install -e ".[dev]"
+python -m pytest
+```
+
+## Quick start
+
 ```python
 import torch
 from spade import Dataset, SpadeConfig, train_spade, optimize_spade
 
-# Load dataset
 data = Dataset.from_npz("dataset.npz")
-
-# Configure SPADE
 cfg = SpadeConfig()
 
-# Train diffusion surrogate
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = train_spade(data, cfg, device=device)
-
-# Optimize designs with LCB + evolutionary search
 result = optimize_spade(model, data, cfg, device=device)
+
 print("best_x_norm:", result.x_best_norm)
 print("best_acq:", result.best_acq)
 ```
 
-### 3) Optional: discrete or structured design spaces
-If your design space is discrete (e.g., categorical sequences), you can:
-- provide a `transform` for kNN distance (e.g., logits -> probabilities), and
-- provide a `project_fn` to map continuous candidates back to valid discrete designs.
+For a command-line NPZ smoke run:
 
-Both hooks are supported in `optimize_spade` and `KnnStats`/`KnnDensityHelper`.
+```bash
+python scripts/run_quickstart_npz.py --data dataset.npz --epochs 1 --gens 1
+```
 
-## Dependencies
-- Python 3.9+
-- `numpy`
-- `torch`
-- `scikit-learn`
+## Data format
 
-## Repo layout
-- `spade/diffusion.py`: conditional diffusion surrogate + DDIM sampling
-- `spade/regularizers.py`: calibration + support-proximity losses
-- `spade/knn.py`: kNN density helper and cached training stats
-- `spade/train.py`: training loop for surrogate fitting
-- `spade/optimize.py`: LCB acquisition + evolutionary search
-- `spade/data.py`: minimal dataset loading and normalization
+SPADE expects a NumPy `.npz` file with:
+
+- `x`: shape `(N, D)`
+- `y`: shape `(N,)` or `(N, 1)`
+
+Dataset-specific preprocessing for Design-Bench and LLM-DM should be added under `scripts/` or `examples/` when released. Datasets are not bundled in this repository.
+
+## Reproducing ICML 2026 experiments
+
+This repository currently provides the compact SPADE implementation, a minimal NPZ runner, and smoke tests. Full benchmark preprocessing/configuration files are not yet released.
+
+Available scaffold:
+
+```text
+scripts/
+  run_quickstart_npz.py
+  reproduce_placeholder.md
+```
+
+TODOs:
+
+- TODO: add Design-Bench preprocessing scripts
+- TODO: add TFBind8/TFBind10 configs
+- TODO: add LLM-DM preprocessing instructions
+- TODO: add final ICML hyperparameter config files
+
+## Repository layout
+
+```text
+spade/
+  diffusion.py
+  regularizers.py
+  knn.py
+  train.py
+  optimize.py
+  data.py
+  config.py
+docs/
+  index.html
+  assets/
+scripts/
+  run_quickstart_npz.py
+  reproduce_placeholder.md
+tests/
+  test_smoke.py
+```
+
+## Project page
+
+The project page is served from `docs/` via GitHub Pages.
+
+Deployment:
+
+1. Go to repository Settings -> Pages.
+2. Source: Deploy from a branch.
+3. Branch: `main`.
+4. Folder: `/docs`.
+5. Save.
+6. The site should appear at:
+   https://HarryYoung2018.github.io/spade/
+
+Local preview:
+
+```bash
+python3 -m http.server 8000 -d docs
+```
+
+Then open:
+http://localhost:8000
+
+Maintainers should upload `docs/assets/img/social-preview.svg` or a rendered PNG as the GitHub repository social preview.
 
 ## Citation
-If you find SPADE useful in your research, please cite this:
+
+If you find SPADE useful in your research, please cite the ICML paper:
+
 ```bibtex
-@inproceedings{
-  yang2026supportproximity,
-  title={Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
-  author={Yonghan Yang and Ye Yuan and Zipeng Sun and Linfeng Du and Bowei He and Haolun Wu and Can Chen and Xue Liu},
-  booktitle={ICLR 2026 2nd Workshop on Deep Generative Model in Machine Learning: Theory, Principle and Efficacy},
-  year={2026},
-  url={https://openreview.net/forum?id=bTMCB3gorf}
+@inproceedings{yang2026spade,
+  title     = {Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
+  author    = {Yang, Yonghan and Yuan, Ye and Sun, Zipeng and Du, Linfeng and He, Bowei and Wu, Haolun and Chen, Can and Liu, Xue},
+  booktitle = {International Conference on Machine Learning},
+  year      = {2026}
 }
 ```
+
+arXiv citation:
+
+```bibtex
+@article{yang2026support,
+  title   = {Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
+  author  = {Yang, Yonghan and Yuan, Ye and Sun, Zipeng and Du, Linfeng and He, Bowei and Wu, Haolun and Chen, Can and Liu, Xue},
+  journal = {arXiv preprint arXiv:2605.11246},
+  year    = {2026}
+}
+```
+
+Update the ICML citation once PMLR/official proceedings metadata is available.
+
+## License
+
+TODO: add repository license.
+
+## Acknowledgments
+
+SPADE builds on the offline black-box optimization benchmark ecosystem, including Design-Bench-style tasks and the LLM-DM benchmark setting used in the paper.
+
+## Maintainer TODOs
+
+- Update GitHub repository description to:
+  `[ICML 2026] Official implementation of SPADE: Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization`
+- Set repository website to:
+  `https://HarryYoung2018.github.io/spade/`
+- Add topics:
+  `offline-optimization`, `black-box-optimization`, `diffusion-models`, `uncertainty-estimation`, `design-bench`, `icml-2026`, `bayesian-optimization`
+- Upload `docs/assets/img/social-preview.svg` or a PNG render as the repository social preview.
+- Add final ICML poster PDF when ready.
+- Add PMLR/OpenReview proceedings link once available.
+- Add a license after confirming the intended license.

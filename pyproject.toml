@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spade-bbo"
+version = "0.1.0"
+description = "Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+  { name = "Yonghan Yang" },
+  { name = "Ye Yuan", email = "ye.yuan3@mail.mcgill.ca" },
+]
+dependencies = [
+  "numpy",
+  "torch",
+  "scikit-learn",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[tool.setuptools.packages.find]
+include = ["spade*"]
