@@ -5,135 +5,175 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SPADE | ICML 2026</title>
     <meta name="description" content="Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization">
-    <link rel="canonical" href="https://HarryYoung2018.github.io/spade/">
+    <link rel="canonical" href="https://harryyoung2018.github.io/spade/">
     <meta property="og:title" content="SPADE | ICML 2026">
     <meta property="og:description" content="Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://HarryYoung2018.github.io/spade/">
-    <meta property="og:image" content="assets/img/social-preview.svg">
+    <meta property="og:url" content="https://harryyoung2018.github.io/spade/">
+    <meta property="og:image" content="assets/img/social-preview.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="SPADE | ICML 2026">
     <meta name="twitter:description" content="Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization">
-    <meta name="twitter:image" content="assets/img/social-preview.svg">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="twitter:image" content="assets/img/social-preview.png">
+    <link rel="stylesheet" href="assets/css/style.css?v=20260609">
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["\\(", "\\)"], ["$", "$"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   </head>
   <body>
     <header class="site-header">
-      <nav class="nav" aria-label="Primary navigation">
-        <a class="brand" href="#top">SPADE</a>
+      <nav class="top-nav" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="SPADE home">
+          <img src="assets/img/spade-logo.png" alt="">
+          <span>SPADE</span>
+        </a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
         <div id="nav-links" class="nav-links">
           <a href="#overview">Overview</a>
           <a href="#method">Method</a>
           <a href="#results">Results</a>
+          <a href="#materials">Materials</a>
           <a href="#code">Code</a>
           <a href="#citation">Citation</a>
         </div>
       </nav>
     </header>
 
+    <button class="toc-toggle" type="button" aria-expanded="false" aria-controls="toc-panel">Contents</button>
+    <aside id="toc-panel" class="toc-panel" aria-label="Table of contents">
+      <div class="toc-title">Table of Contents</div>
+      <a href="#overview">Overview</a>
+      <a href="#ood">OOD Motivation</a>
+      <a href="#method">SPADE Method</a>
+      <a href="#pipeline">Optimization Pipeline</a>
+      <a href="#results">Results</a>
+      <a href="#ablation">Ablation</a>
+      <a href="#materials">Poster & Slides</a>
+      <a href="#code">Code</a>
+      <a href="#reproducibility">Reproducibility</a>
+      <a href="#citation">Citation</a>
+    </aside>
+
     <main id="top">
       <section class="hero">
         <div class="hero-inner">
+          <div class="hero-mark">
+            <img src="assets/img/spade-logo.png" alt="SPADE logo">
+          </div>
           <div class="hero-copy">
-            <div class="venue">ICML 2026</div>
-            <h1>Support-Proximity Augmented Diffusion Estimation <span>for Offline Black-Box Optimization</span></h1>
-            <p class="subtitle">A calibrated diffusion surrogate with support-proximity regularization for robust offline black-box optimization under OOD risk.</p>
+            <div class="venue-row">
+              <span class="venue">ICML 2026</span>
+              <span class="venue secondary">PMLR 306</span>
+            </div>
+            <h1>Support-Proximity Augmented Diffusion Estimation</h1>
+            <p class="subtitle">A calibrated conditional diffusion surrogate with support-proximity regularization for robust offline black-box optimization under OOD risk.</p>
             <p class="authors">Yonghan Yang*, Ye Yuan*, Zipeng Sun, Linfeng Du, Bowei He, Haolun Wu, Can Chen, Xue Liu</p>
-            <p class="affiliations">MBZUAI · McGill University · Mila – Quebec AI Institute</p>
-            <p class="equal">* Equal contribution.</p>
+            <p class="affiliations">MBZUAI · McGill University · Mila - Quebec AI Institute · Amazon AGI</p>
+            <p class="equal">* Equal contribution. Correspondence: <a href="mailto:ye.yuan3@mail.mcgill.ca">ye.yuan3@mail.mcgill.ca</a></p>
             <div class="actions" aria-label="Project links">
-              <a href="https://arxiv.org/abs/2605.11246">Paper</a>
+              <a class="primary" href="https://arxiv.org/abs/2605.11246">Paper</a>
               <a href="https://arxiv.org/pdf/2605.11246">PDF</a>
               <a href="https://github.com/HarryYoung2018/spade">Code</a>
-              <span class="disabled">Poster: TODO</span>
+              <a href="assets/files/spade_icml2026_poster.pdf">Poster</a>
+              <a href="assets/files/spade_icml2026_slides.pdf">Slides</a>
               <a href="#citation">BibTeX</a>
             </div>
           </div>
-          <div class="hero-visual" aria-label="SPADE method diagram">
-            <img src="assets/img/spade-teaser.svg" alt="SPADE pipeline from offline data to conservative optimized design">
-          </div>
         </div>
       </section>
 
-      <section id="overview" class="section">
+      <section id="overview" class="section intro-section">
         <div class="section-grid">
           <div>
-            <p class="kicker">TL;DR</p>
-            <h2>Calibrated diffusion with a support prior</h2>
+            <p class="kicker">Overview</p>
+            <h2>Forward diffusion made conservative for offline design</h2>
           </div>
           <div>
             <p class="lead">SPADE turns forward surrogate modeling into a calibrated conditional diffusion problem and injects a kNN support prior to prevent offline optimizers from exploiting unsupported regions.</p>
-            <p>Offline black-box optimization aims to discover high-scoring designs from a fixed dataset, but learned surrogates are vulnerable to out-of-distribution exploitation. SPADE addresses this by modeling the forward likelihood p(y|x) with a conditional diffusion surrogate, then tailoring it for optimization with moment/rank calibration and kNN-based support-proximity regularization. The support regularizer shrinks predicted means and inflates uncertainty in low-density regions, making acquisition optimization conservative. Empirically, SPADE achieves state-of-the-art performance across Design-Bench tasks and an LLM data-mixture optimization benchmark.</p>
+            <p>Offline black-box optimization searches for high-scoring designs from a fixed dataset without new oracle calls. This setting appears in materials, robot morphology, DNA sequence design, and LLM data-mixture optimization, where each real evaluation can be expensive or unavailable.</p>
+            <p>SPADE models \(p_\theta(y|x)\) with a conditional diffusion surrogate, calibrates its moments and rankings for optimization, and regularizes predictions according to data support. Candidates far from the dataset receive lower means and higher uncertainty, which makes LCB-based acquisition search more conservative.</p>
           </div>
         </div>
       </section>
 
-      <section id="method" class="section method">
+      <section id="ood" class="section visual-section">
+        <div class="section-title">
+          <p class="kicker">Motivation</p>
+          <h2>OOD exploitation is the central failure mode</h2>
+          <p>Surrogate optimizers actively search for high predicted scores. Without a notion of support, the search can amplify surrogate overestimation in regions where historical data provides little evidence.</p>
+        </div>
+        <figure class="wide-figure">
+          <img src="assets/img/spade-ood.png" alt="Illustration of supported and unsupported OOD regions for surrogate optimization">
+          <figcaption>The optimizer should prefer designs that are both high-scoring and supported by the offline dataset.</figcaption>
+        </figure>
+      </section>
+
+      <section id="method" class="section method-section">
         <div class="section-title">
           <p class="kicker">Method</p>
-          <h2>Method: calibrated diffusion plus support proximity</h2>
+          <h2>SPADE: calibrated diffusion plus support proximity</h2>
         </div>
-        <div class="cards">
-          <article class="card">
-            <h3>Conditional Diffusion Surrogate</h3>
-            <p>Models p_theta(y|x), giving a predictive distribution instead of only a deterministic score.</p>
-          </article>
-          <article class="card">
-            <h3>Calibrated Diffusion Estimation</h3>
-            <p>Adds moment matching and pairwise rank consistency to align the surrogate with the objective landscape.</p>
-          </article>
-          <article class="card accent">
-            <h3>Support-Proximity Regularization</h3>
-            <p>Uses kNN distance as a data-support proxy; candidates far from the dataset receive lower means and higher uncertainty.</p>
-          </article>
-        </div>
-        <div class="figure-row">
-          <img src="assets/img/spade-pipeline.svg" alt="SPADE calibrated diffusion and support proximity pipeline">
-          <div class="equations">
-            <div>p(x | y) ∝ p(y | x)p(x)</div>
-            <div>LCB(x) = μ_hat_theta(x) - β σ_hat_theta(x)</div>
-            <div>Support-aware acquisition ≈ utility + κ log p_hat_knn(x)</div>
+        <div class="method-layout">
+          <figure class="method-figure">
+            <img src="assets/img/spade-method.png" alt="SPADE surrogate training and optimization pipeline">
+          </figure>
+          <div class="method-points">
+            <article>
+              <h3>Conditional Diffusion Surrogate</h3>
+              <p>Models \(p_\theta(y|x)\) and estimates predictive mean and uncertainty from Monte Carlo samples.</p>
+            </article>
+            <article>
+              <h3>Calibrated Diffusion Estimation</h3>
+              <p>Adds moment matching and pairwise rank consistency so generated score distributions remain useful for optimization.</p>
+            </article>
+            <article>
+              <h3>Support-Proximity Regularization</h3>
+              <p>Uses kNN distance as a support proxy; low-support candidates receive mean shrinkage and variance inflation.</p>
+            </article>
           </div>
         </div>
       </section>
 
-      <section id="results" class="section results">
+      <section id="pipeline" class="section equation-section">
+        <div class="section-grid">
+          <div>
+            <p class="kicker">Optimization</p>
+            <h2>Search high utility without leaving data support</h2>
+          </div>
+          <div class="equation-card">
+            <div>\[p(x | y) \propto p(y | x)p(x)\]</div>
+            <div>\[\mathrm{LCB}(x) = \hat{\mu}_\theta(x) - \beta \hat{\sigma}_\theta(x)\]</div>
+            <div>\[\hat{A}(x) \approx A(\hat{\mu}_\theta, \hat{\sigma}_\theta) + \kappa \log \hat{p}_{\mathrm{kNN}}(x)\]</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="results" class="section results-section">
         <div class="section-title">
           <p class="kicker">Results</p>
-          <h2>Results: state-of-the-art offline BBO performance</h2>
+          <h2>State-of-the-art offline BBO performance</h2>
+          <p>SPADE achieves the best overall ranking across six benchmark tasks and places in the top two on five of six normalized maximum-score tasks.</p>
         </div>
         <div class="stats">
           <div class="stat"><span>Mean Rank</span><strong>2.8 / 24</strong><small>Normalized maximum score</small></div>
           <div class="stat"><span>Median Rank</span><strong>1.5 / 24</strong><small>Normalized maximum score</small></div>
           <div class="stat"><span>Top-2 Tasks</span><strong>5 / 6</strong><small>Across benchmark tasks</small></div>
           <div class="stat"><span>Median-score Mean Rank</span><strong>1.7 / 24</strong><small>Candidate-distribution robustness</small></div>
-          <div class="stat"><span>Median-score Median Rank</span><strong>1.0 / 24</strong><small>Candidate-distribution robustness</small></div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Task</th><th>SPADE normalized max score</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>SuperC</td><td>0.546 ± 0.013</td></tr>
-              <tr><td>Ant</td><td>0.978 ± 0.006</td></tr>
-              <tr><td>D’Kitty</td><td>0.981 ± 0.003</td></tr>
-              <tr><td>LLM-DM</td><td>1.019 ± 0.064</td></tr>
-              <tr><td>TF8</td><td>0.923 ± 0.015</td></tr>
-              <tr><td>TF10</td><td>0.915 ± 0.010</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="summary-art">
-          <img src="assets/img/results-summary.svg" alt="Results summary showing SPADE strong ranks and top tasks">
-        </div>
+        <figure class="wide-figure">
+          <img src="assets/img/spade-results.png" alt="Table of SPADE benchmark results">
+          <figcaption>Normalized maximum scores among K = 128 candidates, averaged over 8 random seeds.</figcaption>
+        </figure>
       </section>
 
       <section id="ablation" class="section">
         <div class="section-title">
           <p class="kicker">Ablation</p>
-          <h2>Ablation: both modules matter</h2>
+          <h2>Both calibration and support proximity matter</h2>
         </div>
         <div class="table-wrap">
           <table>
@@ -153,12 +193,30 @@
         </div>
       </section>
 
+      <section id="materials" class="section materials-section">
+        <div class="section-title">
+          <p class="kicker">Materials</p>
+          <h2>Poster and presentation</h2>
+          <p>The ICML poster and presentation deck are included in this repository for the project page.</p>
+        </div>
+        <div class="materials-layout">
+          <figure class="poster-preview">
+            <img src="assets/img/spade-poster-preview.png" alt="Preview of the ICML 2026 SPADE poster">
+          </figure>
+          <div class="download-panel">
+            <a class="download-link" href="assets/files/spade_icml2026_poster.pdf">Download poster PDF</a>
+            <a class="download-link" href="assets/files/spade_icml2026_slides.pdf">Download slides PDF</a>
+            <a class="download-link" href="assets/files/spade_icml2026_slides.pptx">Download slides PPTX</a>
+          </div>
+        </div>
+      </section>
+
       <section id="code" class="section code-section">
         <div class="section-grid">
           <div>
             <p class="kicker">Code</p>
             <h2>Compact PyTorch implementation</h2>
-            <p>The public API exposes dataset loading, configuration, surrogate training, and acquisition optimization.</p>
+            <p>The package exposes dataset loading, configuration, surrogate training, and acquisition optimization through a small public API.</p>
           </div>
           <div>
             <pre><code>git clone https://github.com/HarryYoung2018/spade.git
@@ -179,7 +237,20 @@ result = optimize_spade(model, data, cfg, device=device)</code></pre>
         </div>
       </section>
 
-      <section id="citation" class="section citation">
+      <section id="reproducibility" class="section repro-section">
+        <div class="section-grid">
+          <div>
+            <p class="kicker">Reproducibility</p>
+            <h2>Current public release surface</h2>
+          </div>
+          <div>
+            <p>This release includes the method implementation, an NPZ quickstart runner, and smoke tests. It does not include the full benchmark preprocessing and evaluation stack for Design-Bench, TFBind, or LLM-DM.</p>
+            <a class="inline-link" href="https://github.com/HarryYoung2018/spade/blob/main/scripts/reproducibility_status.md">Read reproducibility status</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="citation" class="section citation-section">
         <div class="section-title">
           <p class="kicker">Citation</p>
           <h2>Cite SPADE</h2>
@@ -187,7 +258,11 @@ result = optimize_spade(model, data, cfg, device=device)</code></pre>
         <pre><code>@inproceedings{yang2026spade,
   title     = {Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
   author    = {Yang, Yonghan and Yuan, Ye and Sun, Zipeng and Du, Linfeng and He, Bowei and Wu, Haolun and Chen, Can and Liu, Xue},
-  booktitle = {International Conference on Machine Learning},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {306},
+  address   = {Seoul, South Korea},
+  publisher = {PMLR},
   year      = {2026}
 }</code></pre>
         <pre><code>@article{yang2026support,
@@ -206,6 +281,6 @@ result = optimize_spade(model, data, cfg, device=device)</code></pre>
       <a href="mailto:ye.yuan3@mail.mcgill.ca">Contact</a>
     </footer>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js?v=20260609"></script>
   </body>
 </html>

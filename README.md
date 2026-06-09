@@ -9,15 +9,16 @@ Accepted by **ICML 2026**.
 [![arXiv](https://img.shields.io/badge/arXiv-2605.11246-b31b1b.svg)](https://arxiv.org/abs/2605.11246)
 [![ICML 2026](https://img.shields.io/badge/ICML-2026-243b6b.svg)](https://icml.cc/)
 [![Python](https://img.shields.io/badge/python-3.9%2B-3776ab.svg)](https://www.python.org/)
-[![Project page](https://img.shields.io/badge/project-page-1f6feb.svg)](https://HarryYoung2018.github.io/spade/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Project page](https://img.shields.io/badge/project-page-1f6feb.svg)](https://harryyoung2018.github.io/spade/)
 
 | Resource | Link |
 |---|---|
 | Paper | [arXiv:2605.11246](https://arxiv.org/abs/2605.11246) |
 | PDF | [arXiv PDF](https://arxiv.org/pdf/2605.11246) |
-| Project page | [HarryYoung2018.github.io/spade](https://HarryYoung2018.github.io/spade/) |
-| Poster | TODO |
-| Slides | TODO |
+| Project page | [harryyoung2018.github.io/spade](https://harryyoung2018.github.io/spade/) |
+| Poster | [ICML 2026 poster](docs/assets/files/spade_icml2026_poster.pdf) |
+| Slides | [PDF](docs/assets/files/spade_icml2026_slides.pdf) · [PPTX](docs/assets/files/spade_icml2026_slides.pptx) |
 
 ## TL;DR
 
@@ -27,7 +28,7 @@ SPADE turns forward surrogate modeling into a calibrated conditional diffusion p
 
 Offline black-box optimization searches for high-scoring designs from a fixed dataset without online oracle access. A central difficulty is OOD exploitation: optimizers can chase surrogate errors in unsupported regions.
 
-SPADE models the forward likelihood \(p(y|x)\) with a conditional diffusion surrogate, then adds calibration and support-proximity regularization so acquisition optimization remains both expressive and conservative.
+SPADE models the forward likelihood \(p(y|x)\) with a conditional diffusion surrogate, then adds calibration and support-proximity regularization so acquisition optimization remains both expressive and conservative. The method first learns an uncertainty-aware forward surrogate, then searches candidates with a lower-confidence-bound acquisition and evolutionary updates.
 
 ## Method summary
 
@@ -111,26 +112,30 @@ SPADE expects a NumPy `.npz` file with:
 - `x`: shape `(N, D)`
 - `y`: shape `(N,)` or `(N, 1)`
 
-Dataset-specific preprocessing for Design-Bench and LLM-DM should be added under `scripts/` or `examples/` when released. Datasets are not bundled in this repository.
+Datasets are not bundled in this repository. Benchmark-specific preprocessing for Design-Bench, TFBind, and LLM-DM is not included in the current public release.
 
-## Reproducing ICML 2026 experiments
+## Reproducibility status
 
-This repository currently provides the compact SPADE implementation, a minimal NPZ runner, and smoke tests. Full benchmark preprocessing/configuration files are not yet released.
+This repository provides the compact SPADE implementation, editable package installation, smoke tests, and a generic NPZ quickstart runner. It does not currently include the full benchmark preprocessing and evaluation scripts used for the ICML 2026 paper.
 
-Available scaffold:
+Available:
 
 ```text
 scripts/
   run_quickstart_npz.py
-  reproduce_placeholder.md
+  reproducibility_status.md
+tests/
+  test_smoke.py
 ```
 
-TODOs:
+Not included in this release:
 
-- TODO: add Design-Bench preprocessing scripts
-- TODO: add TFBind8/TFBind10 configs
-- TODO: add LLM-DM preprocessing instructions
-- TODO: add final ICML hyperparameter config files
+- Design-Bench preprocessing and task-specific evaluation wrappers.
+- TFBind8/TFBind10 preprocessing and benchmark configs.
+- LLM-DM preprocessing and evaluation instructions.
+- Final per-task experiment configuration files used for the paper tables.
+
+See [scripts/reproducibility_status.md](scripts/reproducibility_status.md) for the current reproducibility surface.
 
 ## Repository layout
 
@@ -148,24 +153,16 @@ docs/
   assets/
 scripts/
   run_quickstart_npz.py
-  reproduce_placeholder.md
+  reproducibility_status.md
 tests/
   test_smoke.py
 ```
 
 ## Project page
 
-The project page is served from `docs/` via GitHub Pages.
+The project page is served from `docs/` via GitHub Pages:
 
-Deployment:
-
-1. Go to repository Settings -> Pages.
-2. Source: Deploy from a branch.
-3. Branch: `main`.
-4. Folder: `/docs`.
-5. Save.
-6. The site should appear at:
-   https://HarryYoung2018.github.io/spade/
+https://harryyoung2018.github.io/spade/
 
 Local preview:
 
@@ -176,8 +173,6 @@ python3 -m http.server 8000 -d docs
 Then open:
 http://localhost:8000
 
-Maintainers should upload `docs/assets/img/social-preview.svg` or a rendered PNG as the GitHub repository social preview.
-
 ## Citation
 
 If you find SPADE useful in your research, please cite the ICML paper:
@@ -186,7 +181,11 @@ If you find SPADE useful in your research, please cite the ICML paper:
 @inproceedings{yang2026spade,
   title     = {Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization},
   author    = {Yang, Yonghan and Yuan, Ye and Sun, Zipeng and Du, Linfeng and He, Bowei and Wu, Haolun and Chen, Can and Liu, Xue},
-  booktitle = {International Conference on Machine Learning},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {306},
+  address   = {Seoul, South Korea},
+  publisher = {PMLR},
   year      = {2026}
 }
 ```
@@ -202,25 +201,10 @@ arXiv citation:
 }
 ```
 
-Update the ICML citation once PMLR/official proceedings metadata is available.
-
 ## License
 
-TODO: add repository license.
+This repository is released under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
 SPADE builds on the offline black-box optimization benchmark ecosystem, including Design-Bench-style tasks and the LLM-DM benchmark setting used in the paper.
-
-## Maintainer TODOs
-
-- Update GitHub repository description to:
-  `[ICML 2026] Official implementation of SPADE: Support-Proximity Augmented Diffusion Estimation for Offline Black-Box Optimization`
-- Set repository website to:
-  `https://HarryYoung2018.github.io/spade/`
-- Add topics:
-  `offline-optimization`, `black-box-optimization`, `diffusion-models`, `uncertainty-estimation`, `design-bench`, `icml-2026`, `bayesian-optimization`
-- Upload `docs/assets/img/social-preview.svg` or a PNG render as the repository social preview.
-- Add final ICML poster PDF when ready.
-- Add PMLR/OpenReview proceedings link once available.
-- Add a license after confirming the intended license.
