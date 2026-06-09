@@ -22,4 +22,4 @@ If the change affects the project page, also preview it locally:
 python3 -m http.server 8000 -d docs
 ```
 
-Do not commit large datasets, benchmark dumps, checkpoints, generated experiment outputs, or private credentials.
+Do not commit large datasets, benchmark dumps, checkpoints, generated experiment outputs, private credentials, visa materials, reimbursement files, or personal documents.
